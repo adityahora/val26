@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Be My Valentine</title>
+    <link rel="stylesheet" href="css/valentine.css" />
+  </head>
+  <body>
+    <!-- Floating hearts background -->
+    <div class="floating-hearts">
+      <span class="heart-float" style="--i:0">💕</span>
+      <span class="heart-float" style="--i:1">💖</span>
+      <span class="heart-float" style="--i:2">💗</span>
+      <span class="heart-float" style="--i:3">💓</span>
+      <span class="heart-float" style="--i:4">💝</span>
+      <span class="heart-float" style="--i:5">❤️</span>
+      <span class="heart-float" style="--i:6">💕</span>
+      <span class="heart-float" style="--i:7">💖</span>
+    </div>
+
+    <div class="card">
+      <div id="valentineQuestion"><b>Will you be my valentine?</b></div>
+      <img src="please.png" alt="cat asking question" class="cat-img" />
+      
+      <p id="noMessage" class="no-message"></p>
+
+      <div class="button-row">
+        <button class="answerButton yes-btn" id="yesButton">Yes 💖</button>
+        <button class="answerButton no-btn" id="noButton">No 😿</button>
+      </div>
+    </div>
+
+    <!-- Video popup overlay -->
+    <div id="videoOverlay" class="video-overlay">
+      <div class="video-popup">
+        <span id="closeVideo" class="close-btn">&times;</span>
+        <video id="bananaVideo" autoplay loop>
+          <source src="banana_cat.webm" type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <script>
+      const noButton = document.getElementById("noButton");
+      const yesButton = document.getElementById("yesButton");
+      const noMessage = document.getElementById("noMessage");
+      const videoOverlay = document.getElementById("videoOverlay");
+      const closeVideo = document.getElementById("closeVideo");
+      const bananaVideo = document.getElementById("bananaVideo");
+
+      let noCount = 0;
+
+      const noMessages = [
+        "Are you sure? 🥺",
+        "Please don't say no! 💔",
+        "You're breaking my heart... 😢",
+        "I'll cry for real! 😭",
+        "Last chance... pretty please? 🙏"
+      ];
+
+      noButton.addEventListener("click", function () {
+        if (noCount < noMessages.length) {
+          noMessage.textContent = noMessages[noCount];
+          noMessage.classList.add("show");
+          // Re-trigger animation
+          noMessage.style.animation = "none";
+          noMessage.offsetHeight;
+          noMessage.style.animation = "";
+
+          // Dodge — move No button randomly
+          noButton.style.position = "relative";
+          const x = Math.random() * 120 - 60;
+          const y = Math.random() * 60 - 30;
+          noButton.style.transform = `translate(${x}px, ${y}px)`;
+
+          noCount++;
+        } else {
+          // 6th click — show centered video overlay
+          noMessage.textContent = "You broke my heart. 😿";
+          noMessage.classList.add("show");
+          videoOverlay.classList.add("show");
+          bananaVideo.play();
+        }
+      });
+
+      // Yes — floating hearts then navigate
+      yesButton.addEventListener("click", function () {
+        yesButton.classList.add("flash");
+        noMessage.textContent = "";
+        noMessage.classList.remove("show");
+
+        for (let i = 0; i < 30; i++) {
+          const heart = document.createElement("span");
+          heart.textContent = ["💖", "💕", "💗", "💝", "❤️"][Math.floor(Math.random() * 5)];
+          heart.className = "burst-heart";
+          heart.style.left = Math.random() * window.innerWidth + "px";
+          heart.style.top = Math.random() * window.innerHeight + "px";
+          heart.style.fontSize = Math.random() * 25 + 18 + "px";
+          heart.style.animationDuration = Math.random() * 1 + 1.2 + "s";
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 2200);
+        }
+
+        setTimeout(() => {
+          location.href = "thankyou.html";
+        }, 1200);
+      });
+
+      // Close video
+      closeVideo.addEventListener("click", function () {
+        videoOverlay.classList.remove("show");
+        bananaVideo.pause();
+        bananaVideo.currentTime = 0;
+      });
+
+      videoOverlay.addEventListener("click", function (e) {
+        if (e.target === videoOverlay) {
+          videoOverlay.classList.remove("show");
+          bananaVideo.pause();
+          bananaVideo.currentTime = 0;
+        }
+      });
+
+    </script>
+  </body>
+</html>

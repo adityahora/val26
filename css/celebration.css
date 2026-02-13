@@ -1,0 +1,455 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Courier", monospace;
+  background: linear-gradient(135deg, #1a0011 0%, #3d0028 40%, #1a0011 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+}
+
+/* ── Confetti canvas ── */
+#confettiCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Emoji rain layer ── */
+.emoji-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.emoji-drop {
+  position: absolute;
+  top: -40px;
+  animation: emojiDrop linear forwards;
+  pointer-events: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@keyframes emojiDrop {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* ── Main scene ── */
+.scene {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 40px 30px;
+  max-width: 600px;
+  width: 90%;
+  animation: sceneEnter 1s ease-out;
+}
+
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Heart ring ── */
+.heart-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  transform: translate(-50%, -50%);
+  animation: ringRotate 12s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.heart-ring span {
+  position: absolute;
+  font-size: 30px;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+  transform: rotate(calc(var(--r) * 45deg)) translateX(160px);
+  filter: blur(1px);
+  opacity: 0.5;
+  animation: heartGlow 2s ease-in-out infinite alternate;
+  animation-delay: calc(var(--r) * 0.25s);
+}
+
+@keyframes ringRotate {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes heartGlow {
+  from {
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 0.8;
+    filter: blur(0px);
+  }
+}
+
+/* ── Title with letter animation ── */
+.title {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.letter {
+  display: inline-block;
+  animation: letterBounce 0.6s ease-out backwards;
+  animation-delay: calc(var(--d) * 0.08s);
+  color: #ffcdd2;
+  text-shadow: 0 0 15px rgba(255, 105, 135, 0.6);
+}
+
+.letter.yes {
+  color: #ff1744;
+  font-weight: bold;
+  text-shadow: 0 0 25px rgba(255, 23, 68, 0.8), 0 0 50px rgba(255, 23, 68, 0.4);
+  animation: letterBounce 0.6s ease-out backwards, letterPulse 1.5s ease-in-out infinite 1.2s;
+}
+
+@keyframes letterBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px) scale(0);
+  }
+  60% {
+    transform: translateY(10px) scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes letterPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* ── Sub text ── */
+.sub-text {
+  font-size: 22px;
+  color: #ff80ab;
+  margin-bottom: 30px;
+  animation: fadeInUp 1s ease-out 1s backwards;
+  text-shadow: 0 0 10px rgba(255, 128, 171, 0.4);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Flowers row ── */
+.flowers-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  animation: fadeInUp 1s ease-out 1.3s backwards;
+}
+
+.flower-item {
+  font-size: 38px;
+  animation: flowerDance 2s ease-in-out infinite;
+  animation-delay: calc(var(--d, 0) * 0.1s);
+}
+
+.flower-item:nth-child(1) { animation-delay: 0s; }
+.flower-item:nth-child(2) { animation-delay: 0.15s; }
+.flower-item:nth-child(3) { animation-delay: 0.3s; }
+.flower-item:nth-child(4) { animation-delay: 0.45s; }
+.flower-item:nth-child(5) { animation-delay: 0.6s; }
+.flower-item:nth-child(6) { animation-delay: 0.75s; }
+.flower-item:nth-child(7) { animation-delay: 0.9s; }
+
+@keyframes flowerDance {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+/* ── Love note ── */
+.love-note {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #ffc1d3;
+  margin-bottom: 30px;
+  font-style: italic;
+  animation: fadeInUp 1s ease-out 1.6s backwards;
+  text-shadow: 0 0 8px rgba(255, 193, 211, 0.3);
+}
+
+/* ── Big beating heart ── */
+.big-heart {
+  font-size: 80px;
+  margin-bottom: 30px;
+  animation: heartbeat 1s ease-in-out infinite, fadeInUp 1s ease-out 1.9s backwards;
+  filter: drop-shadow(0 0 20px rgba(255, 23, 68, 0.6));
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.15);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+}
+
+/* ── Continue button ── */
+.continue-btn {
+  padding: 16px 40px;
+  font-size: 20px;
+  font-family: "Courier", monospace;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff1744, #ff5252);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 5px 20px rgba(255, 23, 68, 0.5);
+  transition: all 0.3s ease;
+  animation: fadeInUp 1s ease-out 2.2s backwards, btnGlow 2s ease-in-out infinite 3s;
+}
+
+.continue-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+}
+
+@keyframes btnGlow {
+  0%, 100% {
+    box-shadow: 0 5px 20px rgba(255, 23, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 5px 35px rgba(255, 23, 68, 0.8), 0 0 60px rgba(255, 23, 68, 0.3);
+  }
+}
+
+/* ── Music Disc ── */
+.music-disc {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 18px rgba(255, 23, 68, 0.5);
+  transition: box-shadow 0.3s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  border: 3px solid #ff1744;
+}
+
+.disc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.music-disc.playing {
+  animation: discSpin 2s linear infinite;
+}
+
+@keyframes discSpin {
+  to { transform: rotate(360deg); }
+}
+
+.music-disc:hover {
+  box-shadow: 0 4px 25px rgba(255, 23, 68, 0.8);
+}
+
+/* ── Lastpage Overlay ── */
+.lastpage-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: transparent;
+}
+
+.lastpage-overlay.show {
+  display: block;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lastpage-overlay iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .scene {
+    padding: 30px 15px;
+  }
+  .title {
+    font-size: 28px;
+  }
+  .sub-text {
+    font-size: 16px;
+  }
+  .flower-item {
+    font-size: 28px;
+  }
+  .flowers-row {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .love-note {
+    font-size: 15px;
+  }
+  .big-heart {
+    font-size: 55px;
+    margin-bottom: 20px;
+  }
+  .continue-btn {
+    padding: 13px 28px;
+    font-size: 16px;
+  }
+  .heart-ring {
+    width: 220px;
+    height: 220px;
+  }
+  .heart-ring span {
+    font-size: 20px;
+    transform: rotate(calc(var(--r) * 45deg)) translateX(110px);
+  }
+  .music-disc {
+    width: 48px;
+    height: 48px;
+    top: 18px;
+    right: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .title {
+    font-size: 22px;
+  }
+  .sub-text {
+    font-size: 14px;
+  }
+  .flowers-row {
+    gap: 4px;
+  }
+  .flower-item {
+    font-size: 22px;
+  }
+  .love-note {
+    font-size: 14px;
+  }
+  .big-heart {
+    font-size: 45px;
+  }
+  .continue-btn {
+    padding: 12px 22px;
+    font-size: 15px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  body {
+    overflow-y: auto;
+  }
+  .scene {
+    padding: 15px 10px;
+  }
+  .title {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .big-heart {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  .heart-ring {
+    display: none;
+  }
+}

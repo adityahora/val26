@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💕 You Said Yes! 💕</title>
+    <link rel="stylesheet" href="css/celebration.css" />
+  </head>
+  <body>
+    <!-- Background music -->
+    <audio id="bgMusic" loop autoplay>
+      <source src="outro.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- Music disc controller -->
+    <div class="music-disc playing" id="musicDisc" title="Play / Pause">
+      <img src="danny.jpg" alt="disc" class="disc-img" />
+    </div>
+
+    <!-- Confetti canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Floating emoji layer -->
+    <div class="emoji-rain" id="emojiRain"></div>
+
+    <!-- Main content -->
+    <div class="scene">
+      <!-- Glowing hearts background ring -->
+      <div class="heart-ring">
+        <span style="--r:0">💖</span>
+        <span style="--r:1">💗</span>
+        <span style="--r:2">💕</span>
+        <span style="--r:3">💓</span>
+        <span style="--r:4">💝</span>
+        <span style="--r:5">❤️</span>
+        <span style="--r:6">💘</span>
+        <span style="--r:7">💖</span>
+      </div>
+
+      <h1 class="title">
+        <span class="letter" style="--d:0">Y</span>
+        <span class="letter" style="--d:1">o</span>
+        <span class="letter" style="--d:2">u</span>
+        <span class="letter space" style="--d:3">&nbsp;</span>
+        <span class="letter" style="--d:4">S</span>
+        <span class="letter" style="--d:5">a</span>
+        <span class="letter" style="--d:6">i</span>
+        <span class="letter" style="--d:7">d</span>
+        <span class="letter space" style="--d:8">&nbsp;</span>
+        <span class="letter yes" style="--d:9">Y</span>
+        <span class="letter yes" style="--d:10">E</span>
+        <span class="letter yes" style="--d:11">S</span>
+        <span class="letter yes" style="--d:12">!</span>
+      </h1>
+
+      <div class="sub-text">💐 Happy Valentine's Day Krippuuuuu!!!💐</div>
+
+      <!-- Flower bouquet row -->
+      <div class="flowers-row">
+        <div class="flower-item"><img src="kripa pics/a.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/b.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/c.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/d.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/e.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/f.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+        <div class="flower-item"><img src="kripa pics/g.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"></div>
+      </div>
+
+      <p class="love-note">
+        I love you forever and ever,<br />
+        My babyyyyy!!! 💕
+      </p>
+
+      <!-- Big beating heart -->
+      <div class="big-heart">❤️</div>
+
+      <button class="continue-btn" id="surpriseBtn">
+        One more surprise... 🎁
+      </button>
+    </div>
+
+    <!-- Lastpage iframe overlay -->
+    <div id="lastpageOverlay" class="lastpage-overlay">
+      <iframe id="lastpageFrame" src="" frameborder="0"></iframe>
+    </div>
+
+    <script>
+      // ── Confetti Canvas ──
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      const confettiColors = [
+        "#ff1744", "#ff5252", "#ff4081", "#f50057",
+        "#ff6b9d", "#e91e63", "#ffcdd2", "#ffd54f",
+        "#ff80ab", "#f8bbd0"
+      ];
+
+      class Confetti {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * -canvas.height;
+          this.w = Math.random() * 10 + 5;
+          this.h = Math.random() * 6 + 3;
+          this.speed = Math.random() * 3 + 2;
+          this.drift = (Math.random() - 0.5) * 2;
+          this.rot = Math.random() * 360;
+          this.rotSpeed = (Math.random() - 0.5) * 10;
+          this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          this.opacity = Math.random() * 0.5 + 0.5;
+        }
+        update() {
+          this.y += this.speed;
+          this.x += this.drift;
+          this.rot += this.rotSpeed;
+          if (this.y > canvas.height + 20) this.reset();
+        }
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate((this.rot * Math.PI) / 180);
+          ctx.globalAlpha = this.opacity;
+          ctx.fillStyle = this.color;
+          ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+          ctx.restore();
+        }
+      }
+
+      const confettiPieces = Array.from({ length: 120 }, () => new Confetti());
+
+      function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiPieces.forEach((c) => {
+          c.update();
+          c.draw();
+        });
+        requestAnimationFrame(animateConfetti);
+      }
+      animateConfetti();
+
+      // ── Emoji Rain ──
+      const emojiRain = document.getElementById("emojiRain");
+      const emojis = [
+        "kripa pics/a.png",
+        "kripa pics/b.png",
+        "kripa pics/c.png",
+        "kripa pics/d.png",
+        "kripa pics/e.png",
+        "kripa pics/f.png",
+        "kripa pics/g.png",
+        "kripa pics/h.jpg",
+        "kripa pics/i.png",
+        "kripa pics/j.png"
+      ];
+
+      function spawnEmoji() {
+        const el = document.createElement("img");
+        el.src = emojis[Math.floor(Math.random() * emojis.length)];
+        el.className = "emoji-drop";
+        el.style.left = Math.random() * 100 + "%";
+        const size = Math.random() * 30 + 30 + "px";
+        el.style.width = size;
+        el.style.height = size;
+        el.style.animationDuration = Math.random() * 3 + 3 + "s";
+        emojiRain.appendChild(el);
+        setTimeout(() => el.remove(), 6000);
+      }
+      setInterval(spawnEmoji, 250);
+
+      // ── Music Disc Controller ──
+      const bgMusic = document.getElementById("bgMusic");
+      const musicDisc = document.getElementById("musicDisc");
+      let isPlaying = false;
+
+      // Try autoplay immediately
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        musicDisc.classList.add("playing");
+      }).catch(() => {
+        // Browser blocked autoplay, start on first click
+        function startMusic() {
+          bgMusic.play().then(() => {
+            isPlaying = true;
+            musicDisc.classList.add("playing");
+          }).catch(() => {});
+          document.removeEventListener("click", startMusic);
+        }
+        document.addEventListener("click", startMusic);
+      });
+
+      musicDisc.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (isPlaying) {
+          bgMusic.pause();
+          isPlaying = false;
+          musicDisc.classList.remove("playing");
+        } else {
+          bgMusic.play();
+          isPlaying = true;
+          musicDisc.classList.add("playing");
+        }
+      });
+
+      // ── Surprise Button → Load lastpage in overlay ──
+      document.getElementById("surpriseBtn").addEventListener("click", function () {
+        const overlay = document.getElementById("lastpageOverlay");
+        const frame = document.getElementById("lastpageFrame");
+        frame.src = "lastpage.html";
+        overlay.classList.add("show");
+      });
+    </script>
+  </body>
+</html>
